@@ -29,18 +29,18 @@ const ROOM_COL_W  = 110;
 // high = Dec/Jan/Feb). Dorm prices are per bed. Tent & Hippobus prices are
 // placeholders — they weren't in the supplied list.
 const ROOMS = [
-  { id: "savanna",       name: "Savanna ensuite", type: "private", desc: "Double bed, en-suite bathroom with tub/shower combo, desk.", priceLow: 49, priceHigh: 54, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/Savanna.jpg" },
-  { id: "jungle",        name: "Jungle ensuite",  type: "private", desc: "Double bed, en-suite bathroom with tub/shower combo, door to garden, desk.", priceLow: 49, priceHigh: 54, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/jungle.jpg" },
-  { id: "ocean",         name: "Ocean twin",      type: "private", desc: "Small twin room with 2 single beds or king, shared bathroom.", priceLow: 41, priceHigh: 44, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/Ocean.jpg" },
-  { id: "sky",           name: "Sky twin",        type: "private", desc: "Larger twin room with 2 single beds or king, shared bathroom & desk. Note: by the kitchen, so more susceptible to noise.", priceLow: 41, priceHigh: 44, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/Sky.jpg" },
-  { id: "joannas_cabin", name: "Joanna's Cabin", type: "private", desc: "Cabin in the front yard. Double bed, outdoor bathroom & desk.", priceLow: 44, priceHigh: 48, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/joannas_cabin.jpeg" },
-  { id: "cove",          name: "Cove ensuite",    type: "private", desc: "Small private room with double bed, en-suite bathroom, separate entrance from the rest of the house for added privacy.", priceLow: 44, priceHigh: 48, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/cove.jpg" },
-  { id: "zazus_cabin",   name: "Zazu's Cabin",   type: "private", desc: "Cabin in a private corner of the property. Double bed, outdoor bathroom & desk.", priceLow: 44, priceHigh: 48, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/zazus_cabin.jpg" },
-  { id: "sunrise",       name: "Sunrise ensuite", type: "private", desc: "Largest room. Double bed, en-suite bathroom with separate tub and shower.", priceLow: 52, priceHigh: 56, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/sunrise.jpg" },
-  { id: "dorm8",         name: "Dorm 8-bed",     type: "dorm",    beds: 8, desc: "Bed in the 8-bed shared dorm. Shared bathroom.", priceLow: 17, priceHigh: 20, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/dorm8.jpg" },
-  { id: "dorm4",         name: "Dorm 4-bed",     type: "dorm",    beds: 4, desc: "Bed in the 4-bed shared dorm. Shared bathroom.", priceLow: 17, priceHigh: 20, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/dorm4.jpg" },
-  { id: "dorm2",         name: "Dorm 2-bed",     type: "dorm",    beds: 2, desc: "Bed in the 2-bed shared dorm. Shared bathroom.", priceLow: 17, priceHigh: 20, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/dorm2.jpg" },
-  { id: "hippobus",      name: "Hippobus",       type: "special", desc: "A simple van with a big history. Double bed, make-shift tiny desk and a fan. Not a luxurious option, but our cheapest private.", priceLow: 25, priceHigh: 30, photo: "https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/hippobus.jpeg" },
+  { id: "ocean",         name: "Ocean twin",      type: "private", desc: "Small twin room with 2 single beds or king, shared bathroom.", priceLow: 41, priceHigh: 44, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/Ocean.jpg"] },
+  { id: "sky",           name: "Sky twin",        type: "private", desc: "Larger twin room with 2 single beds or king, shared bathroom & desk. Note: by the kitchen, so more susceptible to noise.", priceLow: 41, priceHigh: 44, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/Sky.jpg"] },
+  { id: "joannas_cabin", name: "Joanna's Cabin", type: "private", desc: "Cabin in the front yard. Double bed, outdoor bathroom & desk.", priceLow: 44, priceHigh: 48, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/joannas_cabin.jpeg"] },
+  { id: "zazus_cabin",   name: "Zazu's Cabin",   type: "private", desc: "Cabin in a private corner of the property. Double bed, outdoor bathroom & desk.", priceLow: 44, priceHigh: 48, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/zazus_cabin.jpg"] },
+  { id: "cove",          name: "Cove ensuite",    type: "private", desc: "Small private room with double bed, en-suite bathroom, separate entrance from the rest of the house for added privacy.", priceLow: 44, priceHigh: 48, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/cove.jpg"] },
+  { id: "savanna",       name: "Savanna ensuite", type: "private", desc: "Double bed, en-suite bathroom with tub/shower combo, desk.", priceLow: 49, priceHigh: 54, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/Savanna.jpg"] },
+  { id: "jungle",        name: "Jungle ensuite",  type: "private", desc: "Double bed, en-suite bathroom with tub/shower combo, door to garden, desk.", priceLow: 49, priceHigh: 54, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/jungle.jpg"] },
+  { id: "sunrise",       name: "Sunrise ensuite", type: "private", desc: "Largest room. Double bed, en-suite bathroom with separate tub and shower.", priceLow: 52, priceHigh: 56, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/sunrise.jpg"] },
+  { id: "dorm8",         name: "Dorm 8-bed",     type: "dorm",    beds: 8, desc: "Bed in the 8-bed shared dorm. Shared bathroom.", priceLow: 17, priceHigh: 20, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/dorm8.jpg"] },
+  { id: "dorm4",         name: "Dorm 4-bed",     type: "dorm",    beds: 4, desc: "Bed in the 4-bed shared dorm. Shared bathroom.", priceLow: 17, priceHigh: 20, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/dorm4.jpg"] },
+  { id: "dorm2",         name: "Dorm 2-bed",     type: "dorm",    beds: 2, desc: "Bed in the 2-bed shared dorm. Shared bathroom.", priceLow: 17, priceHigh: 20, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/dorm2.jpg"] },
+  { id: "hippobus",      name: "Hippobus",       type: "special", desc: "A simple van with a big history. Double bed, make-shift tiny desk and a fan. Not a luxurious option, but our cheapest private.", priceLow: 25, priceHigh: 30, photos: ["https://tmpcpfojwkvnvtfqyuwi.supabase.co/storage/v1/object/public/room-photos/hippobus.jpeg"] },
   { id: "tent1", name: "Tent 1", type: "tent", desc: "Owner-managed tent (not shown to guests).", priceLow: 28, priceHigh: 34, ownerOnly: true },
   { id: "tent2", name: "Tent 2", type: "tent", desc: "Owner-managed tent (not shown to guests).", priceLow: 28, priceHigh: 34, ownerOnly: true },
   { id: "tent3", name: "Tent 3", type: "tent", desc: "Owner-managed tent (not shown to guests).", priceLow: 28, priceHigh: 34, ownerOnly: true },
@@ -433,6 +433,8 @@ export default function KhayaGuestCalendar() {
   const [searchOut, setSearchOut] = useState("");   // preferred check-out
   const scrollRef = useRef(null);
   const [showDatePicker, setShowDatePicker] = useState(false); // custom date-range popup
+  const [lightboxRoom, setLightboxRoom] = useState(null); // room object whose photos are open, or null
+  const [lightboxIndex, setLightboxIndex] = useState(0); // which photo within lightboxRoom.photos
   const [guestName, setGuestName] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
   const [showPolicy, setShowPolicy] = useState(false);
@@ -919,6 +921,16 @@ export default function KhayaGuestCalendar() {
             />
           )}
 
+          {/* Room photo lightbox */}
+          {lightboxRoom && (
+            <PhotoLightbox
+              room={lightboxRoom}
+              index={lightboxIndex}
+              onIndexChange={setLightboxIndex}
+              onClose={() => setLightboxRoom(null)}
+            />
+          )}
+
           {/* Triggered popup: the guest searched a specific range and nothing fits
               anywhere — this is the moment to mention Mayana, since it's the one
               point where the app can tell the guest "no" with confidence. */}
@@ -1180,8 +1192,19 @@ export default function KhayaGuestCalendar() {
                               display: "flex", gap: 14, alignItems: "flex-start",
                             }}>
                               <div style={{ width: 120, flexShrink: 0 }}>
-                                {room.photo ? (
-                                  <img src={room.photo} alt={room.name} style={{ width: "100%", borderRadius: 10, display: "block", aspectRatio: "4 / 3", objectFit: "cover" }} />
+                                {room.photos && room.photos.length ? (
+                                  <div
+                                    onClick={() => { setLightboxRoom(room); setLightboxIndex(0); }}
+                                    style={{ position: "relative", cursor: "pointer" }}
+                                    title="View photos"
+                                  >
+                                    <img src={room.photos[0]} alt={room.name} style={{ width: "100%", borderRadius: 10, display: "block", aspectRatio: "4 / 3", objectFit: "cover" }} />
+                                    {room.photos.length > 1 && (
+                                      <span style={{ position: "absolute", bottom: 5, right: 5, background: "rgba(0,0,0,0.6)", color: "#fff", fontSize: 10, fontWeight: 700, borderRadius: 6, padding: "2px 6px" }}>
+                                        1/{room.photos.length}
+                                      </span>
+                                    )}
+                                  </div>
                                 ) : (
                                   <div style={{
                                     width: "100%", aspectRatio: "4 / 3", borderRadius: 10,
@@ -1629,6 +1652,71 @@ function prettyShort(key) {
 
 // Custom tap-arrive-then-tap-leave date range picker. Works everywhere (no
 // reliance on the native date input, which the artifact sandbox blocks).
+// Full-screen photo viewer for a room — opened by tapping its thumbnail.
+// Supports left/right navigation (buttons, keyboard arrows, and a small
+// thumbnail strip) when a room has more than one photo; degrades cleanly
+// to just a close button when there's only one.
+function PhotoLightbox({ room, index, onIndexChange, onClose }) {
+  const photos = room.photos || [];
+  const hasMultiple = photos.length > 1;
+
+  useEffect(() => {
+    function onKey(e) {
+      if (e.key === "Escape") onClose();
+      else if (e.key === "ArrowRight" && hasMultiple) onIndexChange((index + 1) % photos.length);
+      else if (e.key === "ArrowLeft" && hasMultiple) onIndexChange((index - 1 + photos.length) % photos.length);
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [index, photos.length, hasMultiple, onIndexChange, onClose]);
+
+  if (!photos.length) return null;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{ position: "fixed", inset: 0, background: "rgba(10,16,12,0.92)", zIndex: 400, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 16 }}
+    >
+      <button onClick={onClose} style={{ position: "absolute", top: 16, right: 16, background: "rgba(255,255,255,0.15)", border: "none", color: "#fff", borderRadius: "50%", width: 38, height: 38, fontSize: 20, cursor: "pointer", lineHeight: 1 }}>×</button>
+
+      <div style={{ fontSize: 14, fontWeight: 700, color: "#fff", marginBottom: 12, textAlign: "center" }}>{room.name}</div>
+
+      <div onClick={e => e.stopPropagation()} style={{ position: "relative", width: "100%", maxWidth: 640, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        {hasMultiple && (
+          <button
+            onClick={() => onIndexChange((index - 1 + photos.length) % photos.length)}
+            style={{ position: "absolute", left: 4, background: "rgba(0,0,0,0.45)", border: "none", color: "#fff", borderRadius: "50%", width: 40, height: 40, fontSize: 18, cursor: "pointer", zIndex: 1 }}
+          >‹</button>
+        )}
+        <img src={photos[index]} alt={`${room.name} photo ${index + 1} of ${photos.length}`} style={{ maxWidth: "100%", maxHeight: "70vh", borderRadius: 10, display: "block", objectFit: "contain" }} />
+        {hasMultiple && (
+          <button
+            onClick={() => onIndexChange((index + 1) % photos.length)}
+            style={{ position: "absolute", right: 4, background: "rgba(0,0,0,0.45)", border: "none", color: "#fff", borderRadius: "50%", width: 40, height: 40, fontSize: 18, cursor: "pointer", zIndex: 1 }}
+          >›</button>
+        )}
+      </div>
+
+      {hasMultiple && (
+        <div onClick={e => e.stopPropagation()} style={{ display: "flex", gap: 6, marginTop: 14, flexWrap: "wrap", justifyContent: "center", maxWidth: 640 }}>
+          {photos.map((url, i) => (
+            <button
+              key={i}
+              onClick={() => onIndexChange(i)}
+              style={{
+                width: 46, height: 34, padding: 0, border: i === index ? "2px solid #fff" : "2px solid transparent",
+                borderRadius: 6, overflow: "hidden", cursor: "pointer", opacity: i === index ? 1 : 0.55, background: "none",
+              }}
+            >
+              <img src={url} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DateRangePicker({ start, end, searchIn, searchOut, onPick, onClose }) {
   // Build the list of months spanning [start, end]
   const months = [];
