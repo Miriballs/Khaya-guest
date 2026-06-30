@@ -913,8 +913,8 @@ export default function KhayaGuestCalendar() {
               anywhere — this is the moment to mention Mayana, since it's the one
               point where the app can tell the guest "no" with confidence. */}
           {noRoomFitsSearch && !dismissedFullPopup && (
-            <div onClick={() => setDismissedFullPopup(true)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
-              <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: "14px 14px 0 0", padding: 20, width: "100%", maxWidth: 480 }}>
+            <div onClick={() => setDismissedFullPopup(true)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, boxSizing: "border-box" }}>
+              <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 420 }}>
                 <div style={{ fontSize: 17, fontWeight: 800, color: "#1C3829", marginBottom: 8 }}>Nothing free for those dates</div>
                 <p style={{ fontSize: 14, color: "#444", lineHeight: 1.5, marginTop: 0, marginBottom: 14 }}>
                   Khaya is fully booked for {prettyShort(searchIn)} → {prettyShort(searchOut)} — but message me anyway. I can often still find a space at Khaya, or at our sister guesthouse nearby.
