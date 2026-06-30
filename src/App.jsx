@@ -1,4 +1,3 @@
-
 import { useState, useRef, useEffect } from "react";
 // Real npm dependency now that this runs through an actual build step
 // (Vite) — see package.json. If you ever need to paste this file directly
@@ -397,13 +396,10 @@ export default function KhayaGuestCalendar() {
     return true;
   }
 
-  // The live booking window: starts today, runs 6 months out. (Demo data
-  // used to span a fixed Oct 2026–Apr 2027 test season — for the real site
-  // this should track the real calendar. 6 months is a starting guess, not
-  // a locked-in decision — easy to change to whatever booking horizon
-  // actually fits how far out guests realistically plan.)
+  // The live booking window: starts today, runs 12 months out — set
+  // deliberately, not a leftover default.
   const SEASON_START = (() => { const t = new Date(); t.setHours(0, 0, 0, 0); return t; })();
-  const SEASON_END = (() => { const d = new Date(SEASON_START); d.setMonth(d.getMonth() + 6); return d; })();
+  const SEASON_END = (() => { const d = new Date(SEASON_START); d.setMonth(d.getMonth() + 12); return d; })();
   const today = SEASON_START;
   const dayCount = Math.round((SEASON_END - SEASON_START) / 86400000) + 1;
   const DATES = buildDates(SEASON_START, dayCount);
@@ -921,7 +917,7 @@ export default function KhayaGuestCalendar() {
               <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: "14px 14px 0 0", padding: 20, width: "100%", maxWidth: 480 }}>
                 <div style={{ fontSize: 17, fontWeight: 800, color: "#1C3829", marginBottom: 8 }}>Nothing free for those dates</div>
                 <p style={{ fontSize: 14, color: "#444", lineHeight: 1.5, marginTop: 0, marginBottom: 14 }}>
-                  Khaya is fully booked for {prettyShort(searchIn)} → {prettyShort(searchOut)} — but message me anyway. I can sometimes still find a space at Khaya, or at our sister guesthouse nearby.
+                  Khaya is fully booked for {prettyShort(searchIn)} → {prettyShort(searchOut)} — but message me anyway. I can often still find a space at Khaya, or at our sister guesthouse nearby.
                 </p>
                 <button onClick={() => setDismissedFullPopup(true)} style={{ width: "100%", background: SELECTED_BG, color: "#fff", border: "none", borderRadius: 10, padding: "12px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
                   Got it
@@ -952,7 +948,7 @@ export default function KhayaGuestCalendar() {
           {/* Standing sister-property nudge — always visible, low-key, separate from the
               triggered full-dates popup below. */}
           <div style={{ padding: "8px 16px", fontSize: 12, color: "#5A4F3E", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, textAlign: "center" }}>
-            Fully booked for your dates? Message me anyway — I can sometimes still find a space at Khaya, or at our sister guesthouse nearby.
+            Fully booked for your dates? Message me anyway — I can often still find a space at Khaya, or at our sister guesthouse nearby.
           </div>
 
           {/* Tape chart */}
