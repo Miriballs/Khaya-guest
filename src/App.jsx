@@ -431,8 +431,9 @@ export default function KhayaGuestCalendar() {
   const [requestSent, setRequestSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState(null);
-  const [showCoach, setShowCoach] = useState(false); // animated first-use hints over the grid
-  const [showCoach2, setShowCoach2] = useState(false); // second hint, revealed shortly after
+  const [showCoach, setShowCoach] = useState(false); // animated first-use hints, three in sequence
+  const [showCoach2, setShowCoach2] = useState(false); // second hint, revealed shortly after the first
+  const [showCoach3, setShowCoach3] = useState(false); // third hint, revealed after the second
 
   // Guests always see the compact layout (no size toggle).
   const ZOOM = {
@@ -453,12 +454,13 @@ export default function KhayaGuestCalendar() {
     if (scrollRef.current) scrollRef.current.scrollLeft = 0;
   }, []);
 
-  // Coachmarks: reveal the two hints in sequence (0s, 2s), then auto-dismiss
+  // Coachmarks: reveal the three hints in sequence (0s, 2s, 4s), then auto-dismiss
   useEffect(() => {
-    if (!showCoach) { setShowCoach2(false); return; }
+    if (!showCoach) { setShowCoach2(false); setShowCoach3(false); return; }
     const t2 = setTimeout(() => setShowCoach2(true), 2000);
-    const tEnd = setTimeout(() => setShowCoach(false), 8000);
-    return () => { clearTimeout(t2); clearTimeout(tEnd); };
+    const t3 = setTimeout(() => setShowCoach3(true), 4000);
+    const tEnd = setTimeout(() => setShowCoach(false), 10000);
+    return () => { clearTimeout(t2); clearTimeout(t3); clearTimeout(tEnd); };
   }, [showCoach]);
 
   // Close the welcome popup and reveal the on-grid hints
@@ -1228,6 +1230,22 @@ export default function KhayaGuestCalendar() {
             </table>
           </div>
 
+          {/* First-use animated hints, three in sequence: the date picker
+              button (fixed position, since it lives outside this grid's own
+              container), then two anchored over the grid itself. */}
+          {showCoach && (
+            <div style={{ position: "fixed", top: 70, left: 16, right: 16, pointerEvents: "none", zIndex: 250, display: "flex", justifyContent: "flex-start" }}>
+              <style>{`
+                @keyframes khayaBounceUp { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+                @keyframes khayaFade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+              `}</style>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(28,56,41,0.94)", color: "#fff", borderRadius: 20, padding: "7px 14px", fontSize: 12, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.25)", animation: "khayaFade 0.3s ease both" }}>
+                <span style={{ display: "inline-block", animation: "khayaBounceUp 1.1s ease-in-out infinite", fontSize: 15 }}>👆</span>
+                Choose your dates here
+              </div>
+            </div>
+          )}
+
           {/* First-use animated hints over the grid */}
           {showCoach && (
             <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 60 }}>
@@ -1237,16 +1255,18 @@ export default function KhayaGuestCalendar() {
                 @keyframes khayaFade  { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
               `}</style>
 
-              {/* Hint 1 — slide along the dates (anchored near the date header) */}
-              <div style={{ position: "absolute", top: 8, left: ROOM_COL_W + 10, right: 12, display: "flex", justifyContent: "center", animation: "khayaFade 0.3s ease both" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(28,56,41,0.94)", color: "#fff", borderRadius: 20, padding: "7px 14px", fontSize: 12, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.25)" }}>
-                  <span style={{ display: "inline-block", animation: "khayaSlide 1.3s ease-in-out infinite", fontSize: 15 }}>👉</span>
-                  Slide along the dates to browse
-                </div>
-              </div>
-
-              {/* Hint 2 — pick your nights (anchored over the first room rows) */}
+              {/* Hint 2 — OR slide along the dates (anchored near the date header) */}
               {showCoach2 && (
+                <div style={{ position: "absolute", top: 8, left: ROOM_COL_W + 10, right: 12, display: "flex", justifyContent: "center", animation: "khayaFade 0.3s ease both" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(28,56,41,0.94)", color: "#fff", borderRadius: 20, padding: "7px 14px", fontSize: 12, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.25)" }}>
+                    <span style={{ display: "inline-block", animation: "khayaSlide 1.3s ease-in-out infinite", fontSize: 15 }}>👉</span>
+                    OR slide along the dates to browse
+                  </div>
+                </div>
+              )}
+
+              {/* Hint 3 — pick your nights (anchored over the first room rows) */}
+              {showCoach3 && (
                 <div style={{ position: "absolute", top: 150, left: ROOM_COL_W + 64, display: "flex", animation: "khayaFade 0.3s ease both" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, background: SELECTED_BG, color: "#fff", borderRadius: 20, padding: "7px 14px", fontSize: 12, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.25)" }}>
                     <span style={{ display: "inline-block", animation: "khayaTap 1.1s ease-in-out infinite", fontSize: 15 }}>👆</span>
