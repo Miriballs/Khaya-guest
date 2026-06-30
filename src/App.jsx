@@ -925,7 +925,7 @@ export default function KhayaGuestCalendar() {
           {noRoomFitsSearch && !dismissedFullPopup && (
             <div onClick={() => setDismissedFullPopup(true)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, boxSizing: "border-box" }}>
               <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 420 }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: "#1C3829", marginBottom: 8 }}>Oops time to message me</div>
+                <div style={{ fontSize: 17, fontWeight: 800, color: "#1C3829", marginBottom: 8 }}>Oops — time to message me</div>
                 <p style={{ fontSize: 14, color: "#444", lineHeight: 1.5, marginTop: 0, marginBottom: 14 }}>
                   Calendar is looking pretty full for {prettyShort(searchIn)} → {prettyShort(searchOut)}, but contact me directly and I can often still find you space at Khaya or at our sister guesthouse nearby.
                 </p>
