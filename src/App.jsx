@@ -218,6 +218,14 @@ function fitsParty(roomId, dateKey, people) {
   return people <= sleeps;
 }
 
+// True if every guest-facing room is blocked on this night — used to flag
+// genuinely dead nights in the date-range picker. Deliberately independent
+// of party size (a strict "is there any capacity left at all, for anyone"
+// check) since the picker is often used before party size is finalized.
+function nightFullyUnavailable(dateKey) {
+  return GUEST_ROOMS.every(r => isBlocked(r.id, dateKey));
+}
+
 function checkRoomDatesFreeForEdit(roomId, checkInKey, checkOutKey, people, excludeId) {
   const room = ROOMS.find(r => r.id === roomId);
   if (!room) return { ok: false, reason: "Unknown room." };
@@ -917,9 +925,9 @@ export default function KhayaGuestCalendar() {
           {noRoomFitsSearch && !dismissedFullPopup && (
             <div onClick={() => setDismissedFullPopup(true)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, boxSizing: "border-box" }}>
               <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 420 }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: "#1C3829", marginBottom: 8 }}>Nothing free for those dates</div>
+                <div style={{ fontSize: 17, fontWeight: 800, color: "#1C3829", marginBottom: 8 }}>Oops time to message me</div>
                 <p style={{ fontSize: 14, color: "#444", lineHeight: 1.5, marginTop: 0, marginBottom: 14 }}>
-                  Khaya is fully booked for {prettyShort(searchIn)} → {prettyShort(searchOut)} — but message me anyway. I can often still find a space at Khaya, or at our sister guesthouse nearby.
+                  Calendar is looking pretty full for {prettyShort(searchIn)} → {prettyShort(searchOut)}, but contact me directly and I can often still find you space at Khaya or at our sister guesthouse nearby.
                 </p>
                 <button onClick={() => setDismissedFullPopup(true)} style={{ width: "100%", background: SELECTED_BG, color: "#fff", border: "none", borderRadius: 10, padding: "12px 0", fontSize: 14, fontWeight: 700, cursor: "pointer" }}>
                   Got it
@@ -947,10 +955,13 @@ export default function KhayaGuestCalendar() {
             </div>
           </div>
 
-          {/* Standing sister-property nudge — always visible, low-key, separate from the
-              triggered full-dates popup below. */}
-          <div style={{ padding: "8px 16px", fontSize: 12, color: "#5A4F3E", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, textAlign: "center" }}>
-            Fully booked for your dates? Message me anyway — I can often still find a space at Khaya, or at our sister guesthouse nearby.
+          {/* Standing sister-property nudge — always visible, separate from the
+              triggered full-dates popup below. Deliberately a bit more
+              noticeable than a typical helper line, but still calm — a
+              left accent border and icon, not a loud banner. */}
+          <div style={{ padding: "10px 16px", fontSize: 13, fontWeight: 600, color: "#3D3424", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, borderLeft: `4px solid ${SELECTED_BG}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, textAlign: "center" }}>
+            <span style={{ fontSize: 14, flexShrink: 0 }}>💬</span>
+            <span>Fully booked for your dates? Message me anyway — I can often still find a space at Khaya, or at our sister guesthouse nearby.</span>
           </div>
 
           {/* Tape chart */}
@@ -1690,6 +1701,12 @@ function DateRangePicker({ start, end, searchIn, searchOut, onPick, onClose }) {
                     const outOfSeason = key < startKey || key > endKey;
                     const isAnchor = key === searchIn || key === searchOut;
                     const within = inRange(key);
+                    // Flags a genuinely dead night — every guest-facing room
+                    // blocked, nobody could book anything. Still tappable
+                    // (a guest may want to select it anyway and message
+                    // about it), just visually marked. Selection/anchor
+                    // states still take priority if they tap it regardless.
+                    const dead = !outOfSeason && nightFullyUnavailable(key);
                     return (
                       <button
                         key={ci}
@@ -1699,8 +1716,8 @@ function DateRangePicker({ start, end, searchIn, searchOut, onPick, onClose }) {
                           aspectRatio: "1 / 1", border: "none", borderRadius: 8,
                           fontSize: 13, fontWeight: isAnchor ? 800 : 500,
                           cursor: outOfSeason ? "default" : "pointer",
-                          background: outOfSeason ? "transparent" : isAnchor ? SELECTED_BG : within ? "#DCEAE0" : "#F4F1EB",
-                          color: outOfSeason ? "#D8D2C8" : isAnchor ? "#fff" : "#2D3D30",
+                          background: outOfSeason ? "transparent" : isAnchor ? SELECTED_BG : within ? "#DCEAE0" : dead ? "#F6DEDA" : "#F4F1EB",
+                          color: outOfSeason ? "#D8D2C8" : isAnchor ? "#fff" : dead ? "#A13B2E" : "#2D3D30",
                         }}
                       >
                         {d}
