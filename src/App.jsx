@@ -358,6 +358,27 @@ export default function KhayaGuestCalendar() {
     loadAvailability().finally(() => setLoading(false));
   }, []);
 
+  // Re-check availability when the guest comes back to this tab after
+  // stepping away — a tab left open for a while can otherwise keep showing
+  // nights as free that someone else has since booked. Throttled to once
+  // per 30s so switching tabs rapidly doesn't hammer the database.
+  const lastRefreshRef = useRef(Date.now());
+  useEffect(() => {
+    function onVisible() {
+      if (document.visibilityState !== "visible") return;
+      if (Date.now() - lastRefreshRef.current < 30000) return;
+      lastRefreshRef.current = Date.now();
+      loadAvailability();
+    }
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("focus", onVisible);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("focus", onVisible);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Submits a real guest booking request. Two inserts, in order, matching
   // what the database's RLS policy on booking_segments actually checks
   // (see khaya-backend-notes.md): the booking row must exist, be pending,
@@ -366,14 +387,14 @@ export default function KhayaGuestCalendar() {
   // the database, because guests have no read access to the bookings table
   // at all — there is no way to ask the database for the id back afterward,
   // so the only way to know it is to choose it ourselves up front.
-  async function submitRequest({ guestName, guestWhatsapp, people, segments }) {
+  async function submitRequest({ guestName, guestWhatsapp, guestEmail, people, segments }) {
     setSubmitting(true);
     setSubmitError(null);
     const bookingId = crypto.randomUUID();
 
     const { error: bookingErr } = await supabase.from("bookings").insert({
-      id: bookingId, guest_name: guestName, guest_whatsapp: guestWhatsapp,
-      people, status: "pending",
+      id: bookingId, guest_name: guestName, guest_whatsapp: guestWhatsapp || null,
+      guest_email: guestEmail || null, people, status: "pending",
     });
     if (bookingErr) {
       setSubmitting(false);
@@ -437,6 +458,7 @@ export default function KhayaGuestCalendar() {
   const [lightboxIndex, setLightboxIndex] = useState(0); // which photo within lightboxRoom.photos
   const [guestName, setGuestName] = useState("");
   const [guestPhone, setGuestPhone] = useState("");
+  const [guestEmail, setGuestEmail] = useState("");
   const [showPolicy, setShowPolicy] = useState(false);
   const [requestSent, setRequestSent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -677,7 +699,11 @@ export default function KhayaGuestCalendar() {
 
   const segments = buildSegments(selected);
   const gaps = findGaps(selected);
-  const totalNights = segments.reduce((s, seg) => s + seg.dates.length, 0);
+  // Distinct calendar nights spanned by the selection — two rooms picked
+  // across the same 35 nights counts as 35, not 70, so the long-stay
+  // discount tier (and the "X nights selected" summary) reflect the actual
+  // length of the stay rather than the number of room-nights sold.
+  const totalNights = new Set(segments.flatMap(seg => seg.dates)).size;
   const segPricings = segments.map(seg => ({ seg, p: priceSegment(seg.room, seg.dates, people, totalNights) }));
     const totalCost   = segPricings.reduce((s, x) => s + x.p.total, 0);
 
@@ -721,10 +747,15 @@ export default function KhayaGuestCalendar() {
   const phoneClean = guestPhone.replace(/[\s()\-]/g, "");
   const phoneValid = /^(\+|00)\d{7,}$/.test(phoneClean);
   const phoneTouchedInvalid = guestPhone.trim().length > 0 && !phoneValid;
+  // Email is the fallback contact method for guests without WhatsApp — a
+  // guest needs to provide at least one of the two, not necessarily both.
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
+  const emailTouchedInvalid = guestEmail.trim().length > 0 && !emailValid;
+  const hasContactMethod = phoneValid || emailValid;
   // Every segment is ≥2 nights, OR exactly 1 night and a genuine orphan gap —
   // no blanket "total ≥2 nights" check, since a single qualifying orphan night
   // is a perfectly valid whole booking on its own.
-  const canSubmit = guestName.trim().length > 0 && phoneValid && segments.length > 0 && !hasInvalidSingleNight;
+  const canSubmit = guestName.trim().length > 0 && hasContactMethod && segments.length > 0 && !hasInvalidSingleNight;
 
   // Nights implied by the date search (arrive … night before leave). Used to show
   // an average-per-night estimate under each room before the guest picks cells.
@@ -1488,7 +1519,9 @@ export default function KhayaGuestCalendar() {
                 />
               </div>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 600, color: "#999", textTransform: "uppercase", letterSpacing: 1 }}>WhatsApp number <span style={{ color: "#C0392B" }}>*</span></label>
+                <label style={{ fontSize: 11, fontWeight: 600, color: "#999", textTransform: "uppercase", letterSpacing: 1 }}>
+                  WhatsApp number {!emailValid && <span style={{ color: "#C0392B" }}>*</span>}
+                </label>
                 <input
                   value={guestPhone}
                   onChange={(e) => setGuestPhone(e.target.value)}
@@ -1498,6 +1531,21 @@ export default function KhayaGuestCalendar() {
                 />
                 <div style={{ fontSize: 11, color: phoneTouchedInvalid ? "#C0392B" : "#aaa", marginTop: 4 }}>
                   Include the country code — start with + or 00 (e.g. +27 or 0027).
+                </div>
+              </div>
+              <div>
+                <label style={{ fontSize: 11, fontWeight: 600, color: "#999", textTransform: "uppercase", letterSpacing: 1 }}>
+                  Email {!phoneValid && <span style={{ color: "#C0392B" }}>*</span>}
+                </label>
+                <input
+                  value={guestEmail}
+                  onChange={(e) => setGuestEmail(e.target.value)}
+                  placeholder="No WhatsApp? Leave your email instead"
+                  inputMode="email"
+                  style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${emailTouchedInvalid ? "#C0392B" : BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1C3829", fontFamily: "inherit" }}
+                />
+                <div style={{ fontSize: 11, color: emailTouchedInvalid ? "#C0392B" : "#aaa", marginTop: 4 }}>
+                  {phoneValid ? "Optional — only needed if you don't have WhatsApp." : "We need at least a WhatsApp number or an email to reach you."}
                 </div>
               </div>
             </div>
@@ -1541,7 +1589,7 @@ export default function KhayaGuestCalendar() {
             disabled={!canSubmit || submitting}
             onClick={async () => {
               const ok = await submitRequest({
-                guestName, guestWhatsapp: guestPhone, people,
+                guestName, guestWhatsapp: guestPhone, guestEmail, people,
                 segments: selectionToSubmissionSegments(selected),
               });
               if (ok) setRequestSent(true);
@@ -1567,9 +1615,9 @@ export default function KhayaGuestCalendar() {
                   ? `Thanks for your booking request. We're away for a few days and will be slower than usual to reply — but don't worry, your request is locked in until we're back on ${prettyShort(awayUntilKey)}. The booking is only confirmed once approved on our side and payment received.`
                   : "Thanks for your booking request, we will be in touch within 24 hours. Please note the booking is only confirmed once approved on our side and payment received.")
               : (!guestName.trim()
-                  ? "Please add your name and WhatsApp number to continue."
-                  : phoneTouchedInvalid || !guestPhone.trim()
-                    ? "Enter a WhatsApp number starting with + or 00 to continue."
+                  ? "Please add your name and a WhatsApp number or email to continue."
+                  : !hasContactMethod
+                    ? "Add a valid WhatsApp number (starting with + or 00) or a valid email to continue."
                     : gaps.length > 0
                       ? "We'll confirm what we can cover, including the open nights, within 24 hours."
                       : "We'll get back to you within 24 hours to confirm and arrange payment.")}
