@@ -747,15 +747,15 @@ export default function KhayaGuestCalendar() {
   const phoneClean = guestPhone.replace(/[\s()\-]/g, "");
   const phoneValid = /^(\+|00)\d{7,}$/.test(phoneClean);
   const phoneTouchedInvalid = guestPhone.trim().length > 0 && !phoneValid;
-  // Email is the fallback contact method for guests without WhatsApp — a
-  // guest needs to provide at least one of the two, not necessarily both.
-  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
+  // Email is always optional — a nice-to-have extra way to reach a guest,
+  // never a substitute for WhatsApp. Only validated if they actually type
+  // something in; an empty field is always fine.
+  const emailValid = guestEmail.trim() === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim());
   const emailTouchedInvalid = guestEmail.trim().length > 0 && !emailValid;
-  const hasContactMethod = phoneValid || emailValid;
   // Every segment is ≥2 nights, OR exactly 1 night and a genuine orphan gap —
   // no blanket "total ≥2 nights" check, since a single qualifying orphan night
   // is a perfectly valid whole booking on its own.
-  const canSubmit = guestName.trim().length > 0 && hasContactMethod && segments.length > 0 && !hasInvalidSingleNight;
+  const canSubmit = guestName.trim().length > 0 && phoneValid && emailValid && segments.length > 0 && !hasInvalidSingleNight;
 
   // Nights implied by the date search (arrive … night before leave). Used to show
   // an average-per-night estimate under each room before the guest picks cells.
@@ -1348,10 +1348,10 @@ export default function KhayaGuestCalendar() {
             <div style={{
               position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
               background: SELECTED_BG, color: "#fff", borderRadius: 24,
-              padding: "10px 22px", fontSize: 13, fontWeight: 700,
+              padding: "10px 16px", fontSize: 13, fontWeight: 700,
               boxShadow: "0 4px 20px rgba(0,0,0,0.25)", zIndex: 200,
               display: "flex", gap: 14, alignItems: "center", justifyContent: "center",
-              maxWidth: "92vw", flexWrap: "wrap", textAlign: "center",
+              maxWidth: "96vw", flexWrap: "wrap", textAlign: "center",
             }}>
               {meetsMin ? (
                 <>
@@ -1527,7 +1527,7 @@ export default function KhayaGuestCalendar() {
               </div>
               <div>
                 <label style={{ fontSize: 11, fontWeight: 600, color: "#999", textTransform: "uppercase", letterSpacing: 1 }}>
-                  WhatsApp number {!emailValid && <span style={{ color: "#C0392B" }}>*</span>}
+                  WhatsApp number <span style={{ color: "#C0392B" }}>*</span>
                 </label>
                 <input
                   value={guestPhone}
@@ -1542,17 +1542,17 @@ export default function KhayaGuestCalendar() {
               </div>
               <div>
                 <label style={{ fontSize: 11, fontWeight: 600, color: "#999", textTransform: "uppercase", letterSpacing: 1 }}>
-                  Email {!phoneValid && <span style={{ color: "#C0392B" }}>*</span>}
+                  Email
                 </label>
                 <input
                   value={guestEmail}
                   onChange={(e) => setGuestEmail(e.target.value)}
-                  placeholder="No WhatsApp? Leave your email instead"
+                  placeholder="Optional"
                   inputMode="email"
                   style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${emailTouchedInvalid ? "#C0392B" : BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1C3829", fontFamily: "inherit" }}
                 />
                 <div style={{ fontSize: 11, color: emailTouchedInvalid ? "#C0392B" : "#aaa", marginTop: 4 }}>
-                  {phoneValid ? "Optional — only needed if you don't have WhatsApp." : "We need at least a WhatsApp number or an email to reach you."}
+                  Optional — happy to have it as a backup, but not required.
                 </div>
               </div>
             </div>
@@ -1622,12 +1622,14 @@ export default function KhayaGuestCalendar() {
                   ? `Thanks for your booking request. We're away for a few days and will be slower than usual to reply — but don't worry, your request is locked in until we're back on ${prettyShort(awayUntilKey)}. The booking is only confirmed once approved on our side and payment received.`
                   : "Thanks for your booking request, we will be in touch within 24 hours. Please note the booking is only confirmed once approved on our side and payment received.")
               : (!guestName.trim()
-                  ? "Please add your name and a WhatsApp number or email to continue."
-                  : !hasContactMethod
-                    ? "Add a valid WhatsApp number (starting with + or 00) or a valid email to continue."
-                    : gaps.length > 0
-                      ? "We'll confirm what we can cover, including the open nights, within 24 hours."
-                      : "We'll get back to you within 24 hours to confirm and arrange payment.")}
+                  ? "Please add your name and WhatsApp number to continue."
+                  : !phoneValid
+                    ? "Enter a WhatsApp number starting with + or 00 to continue."
+                    : emailTouchedInvalid
+                      ? "That email doesn't look quite right — fix it or clear the field to continue."
+                      : gaps.length > 0
+                        ? "We'll confirm what we can cover, including the open nights, within 24 hours."
+                        : "We'll get back to you within 24 hours to confirm and arrange payment.")}
           </div>
         </div>
       )}
