@@ -905,6 +905,22 @@ export default function KhayaGuestCalendar() {
             )}
           </div>
 
+          {/* First coach mark: inline, immediately below the date input so it
+              naturally points at it on every screen size without fixed-pixel
+              positioning that breaks between phone and desktop. */}
+          {showCoach && (
+            <div style={{ display: "flex", justifyContent: "flex-start", padding: "6px 16px 0", pointerEvents: "none" }}>
+              <style>{`
+                @keyframes khayaBounceUp { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+                @keyframes khayaFade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+              `}</style>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(28,56,41,0.94)", color: "#fff", borderRadius: 20, padding: "7px 14px", fontSize: 12, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.25)", animation: "khayaFade 0.3s ease both" }}>
+                <span style={{ display: "inline-block", animation: "khayaBounceUp 1.1s ease-in-out infinite", fontSize: 15 }}>👆</span>
+                Choose your dates here
+              </div>
+            </div>
+          )}
+
           {/* Date-range picker popup */}
           {showDatePicker && (
             <DateRangePicker
@@ -1263,23 +1279,6 @@ export default function KhayaGuestCalendar() {
               </tbody>
             </table>
           </div>
-
-          {/* First-use animated hints, three in sequence: the date picker
-              button (fixed position, since it lives outside this grid's own
-              container), then two anchored over the grid itself. */}
-          {showCoach && (
-            <div style={{ position: "fixed", top: 130, left: 16, right: 16, pointerEvents: "none", zIndex: 250, display: "flex", justifyContent: "center" }}>
-              <style>{`
-                @keyframes khayaBounceUp { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
-                @keyframes khayaFade { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-              `}</style>
-              <div style={{ display: "flex", alignItems: "center", gap: 8, background: "rgba(28,56,41,0.94)", color: "#fff", borderRadius: 20, padding: "7px 14px", fontSize: 12, fontWeight: 600, boxShadow: "0 4px 14px rgba(0,0,0,0.25)", animation: "khayaFade 0.3s ease both" }}>
-                <span style={{ display: "inline-block", animation: "khayaBounceUp 1.1s ease-in-out infinite", fontSize: 15 }}>👆</span>
-                Choose your dates here
-              </div>
-            </div>
-          )}
-
 
           {/* First-use animated hints over the grid */}
           {showCoach && (
