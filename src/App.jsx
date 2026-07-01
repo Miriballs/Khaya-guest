@@ -1347,25 +1347,32 @@ export default function KhayaGuestCalendar() {
           {selected.size > 0 && (
             <div style={{
               position: "fixed", bottom: 24, left: "50%", transform: "translateX(-50%)",
-              background: SELECTED_BG, color: "#fff", borderRadius: 50,
-              padding: "10px 24px", fontSize: 13, fontWeight: 700,
+              background: SELECTED_BG, color: "#fff", borderRadius: 24,
+              padding: "10px 22px", fontSize: 13, fontWeight: 700,
               boxShadow: "0 4px 20px rgba(0,0,0,0.25)", zIndex: 200,
-              display: "flex", gap: 20, alignItems: "center", whiteSpace: "nowrap",
+              display: "flex", gap: 14, alignItems: "center", justifyContent: "center",
+              maxWidth: "92vw", flexWrap: "wrap", textAlign: "center",
             }}>
-              <span>{totalNights} night{totalNights !== 1 ? "s" : ""} selected</span>
-              <span style={{ opacity: 0.7 }}>|</span>
-              <span>€{totalCost}</span>
-              <span style={{ opacity: 0.7 }}>|</span>
               {meetsMin ? (
-                <span
-                  onClick={() => setView("summary")}
-                  style={{ textDecoration: "underline", cursor: "pointer" }}
-                >
-                  Review →
-                </span>
+                <>
+                  <span style={{ whiteSpace: "nowrap" }}>{totalNights} night{totalNights !== 1 ? "s" : ""} selected</span>
+                  <span style={{ opacity: 0.7 }}>|</span>
+                  <span style={{ whiteSpace: "nowrap" }}>€{totalCost}</span>
+                  <span style={{ opacity: 0.7 }}>|</span>
+                  <span
+                    onClick={() => setView("summary")}
+                    style={{ textDecoration: "underline", cursor: "pointer", whiteSpace: "nowrap" }}
+                  >
+                    Review →
+                  </span>
+                </>
               ) : (
+                // Decluttered on purpose: the nights/price info above isn't
+                // actionable while the selection is invalid, so showing just
+                // the warning alone keeps this readable and short enough to
+                // never need to wrap awkwardly on a small phone screen.
                 <span style={{ color: "#F4D58D" }}>
-                  {hasInvalidSingleNight ? "That single night isn't bookable alone — add another night" : "Minimum 2 nights"}
+                  {hasInvalidSingleNight ? "Uh-oh! Sorry, we don't allow 1 night bookings. Please choose a longer range of days" : "Minimum 2 nights"}
                 </span>
               )}
             </div>
