@@ -875,7 +875,7 @@ export default function KhayaGuestCalendar() {
 
                 <div style={{ display: "flex", flexDirection: "column", gap: 13 }}>
                   <HelpStep n="1" title="Browse the dates">
-                    Slide your finger along the <strong>date row at the top</strong> to scroll through availability.
+                    Select your dates or slide your finger along the <strong>date row at the top</strong> to scroll through availability.
                   </HelpStep>
                   <HelpStep n="2" title="Pick your room(s)">
                     Tap and drag across the white cells to choose your nights.
