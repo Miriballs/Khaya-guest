@@ -839,7 +839,7 @@ export default function KhayaGuestCalendar() {
         rel="noreferrer"
         title="Message us on WhatsApp"
         style={{
-          position: "fixed", right: 14, bottom: 80, zIndex: 140,
+          position: "fixed", right: 14, bottom: 14, zIndex: 140,
           width: 52, height: 52, borderRadius: "50%",
           background: "#258071", color: "#fff",
           display: "flex", alignItems: "center", justifyContent: "center",
