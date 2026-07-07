@@ -831,7 +831,7 @@ export default function KhayaGuestCalendar() {
         style={{
           position: "fixed", right: 16, bottom: selected.size > 0 ? 110 : 24, zIndex: 140,
           width: 52, height: 52, borderRadius: "50%",
-          background: "#25D366", color: "#fff",
+          background: "#299752", color: "#fff",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: 26, textDecoration: "none",
           boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
@@ -1038,14 +1038,13 @@ export default function KhayaGuestCalendar() {
               triggered full-dates popup below. Deliberately a bit more
               noticeable than a typical helper line, but still calm — a
               left accent border and icon, not a loud banner. */}
-          <div style={{ padding: "10px 16px", fontSize: 13, fontWeight: 600, color: "#3D3424", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, borderLeft: `4px solid ${SELECTED_BG}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, textAlign: "center", flexWrap: "wrap" }}>
-            <span style={{ fontSize: 14, flexShrink: 0 }}>💬</span>
+          <div style={{ padding: "10px 16px", fontSize: 12, fontWeight: 600, color: "#3D3424", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, borderLeft: `4px solid ${SELECTED_BG}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, textAlign: "center", flexWrap: "wrap" }}>
             <span>Fully booked for your dates? Message me anyway — I can often still find a space at Khaya, or at our sister guesthouse nearby.</span>
             <a
               href="https://wa.me/27723770575?text=Hi!%20The%20calendar%20looks%20full%20for%20my%20dates%20%E2%80%94%20is%20there%20any%20space%3F"
               target="_blank"
               rel="noreferrer"
-              style={{ background: "#25D366", color: "#fff", borderRadius: 20, padding: "7px 16px", fontSize: 12, fontWeight: 700, textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}
+              style={{ background: "#299752", color: "#fff", borderRadius: 20, padding: "7px 16px", fontSize: 12, fontWeight: 700, textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}
             >
               WhatsApp me
             </a>
@@ -1665,7 +1664,7 @@ export default function KhayaGuestCalendar() {
                 href="https://wa.me/27723770575?text=Hi!%20I%20just%20sent%20a%20booking%20request%20on%20the%20calendar%20%E2%80%94%20wanted%20to%20follow%20up."
                 target="_blank"
                 rel="noreferrer"
-                style={{ display: "inline-block", background: "#25D366", color: "#fff", borderRadius: 20, padding: "9px 20px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}
+                style={{ display: "inline-block", background: "#299752", color: "#fff", borderRadius: 20, padding: "9px 20px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}
               >
                 💬 Message me on WhatsApp
               </a>
