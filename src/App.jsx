@@ -839,9 +839,9 @@ export default function KhayaGuestCalendar() {
         rel="noreferrer"
         title="Message us on WhatsApp"
         style={{
-          position: "fixed", right: 16, bottom: selected.size > 0 ? 110 : 24, zIndex: 140,
+          position: "fixed", right: 16, bottom: selected.size > 0 ? 96 : 16, zIndex: 140,
           width: 52, height: 52, borderRadius: "50%",
-          background: "#299752", color: "#fff",
+          background: "#29A17A", color: "#fff",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: 26, textDecoration: "none",
           boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
@@ -852,7 +852,7 @@ export default function KhayaGuestCalendar() {
       </a>
       {/* Top bar */}
       <div style={{
-        background: HEADER_BG, color: "#fff", padding: "14px 20px",
+        background: HEADER_BG, color: "#fff", padding: "14px 20px 22px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
       }}>
@@ -881,9 +881,12 @@ export default function KhayaGuestCalendar() {
               boxShadow: (view === "calendar" && meetsMin) ? "0 2px 10px rgba(193,105,79,0.4)" : "none",
             }}
           >
-            {view === "calendar" ? `Request to Book →` : `← Back to calendar`}
+            {view === "calendar" ? `Request to Book` : `Back to calendar`}
           </button>
         </div>
+        <svg style={{ position: "absolute", left: 0, right: 0, bottom: 0, width: "100%", height: 14, display: "block" }} viewBox="0 0 400 14" preserveAspectRatio="none">
+          <path d="M0,7 C50,1 100,1 150,7 C200,13 250,13 300,7 C350,1 380,1 400,7 L400,14 L0,14 Z" fill={PAGE_BG} />
+        </svg>
       </div>
 
       {view === "calendar" ? (
@@ -1671,7 +1674,7 @@ export default function KhayaGuestCalendar() {
                 href="https://wa.me/27723770575?text=Hi!%20I%20just%20sent%20a%20booking%20request%20on%20the%20calendar%20%E2%80%94%20wanted%20to%20follow%20up."
                 target="_blank"
                 rel="noreferrer"
-                style={{ display: "inline-block", background: "#299752", color: "#fff", borderRadius: 20, padding: "9px 20px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}
+                style={{ display: "inline-block", background: "#29A17A", color: "#fff", borderRadius: 20, padding: "9px 20px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}
               >
                 💬 Message me on WhatsApp
               </a>
