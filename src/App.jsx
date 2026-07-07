@@ -1038,16 +1038,8 @@ export default function KhayaGuestCalendar() {
               triggered full-dates popup below. Deliberately a bit more
               noticeable than a typical helper line, but still calm — a
               left accent border and icon, not a loud banner. */}
-          <div style={{ padding: "10px 16px", fontSize: 12, fontWeight: 600, color: "#3D3424", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, borderLeft: `4px solid ${SELECTED_BG}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, textAlign: "center", flexWrap: "wrap" }}>
-            <span>Fully booked for your dates? Message me anyway — I can often still find a space at Khaya, or at our sister guesthouse nearby.</span>
-            <a
-              href="https://wa.me/27723770575?text=Hi!%20The%20calendar%20looks%20full%20for%20my%20dates%20%E2%80%94%20is%20there%20any%20space%3F"
-              target="_blank"
-              rel="noreferrer"
-              style={{ background: "#299752", color: "#fff", borderRadius: 20, padding: "7px 16px", fontSize: 12, fontWeight: 700, textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}
-            >
-              WhatsApp me
-            </a>
+          <div style={{ padding: "10px 16px", fontSize: 12, fontWeight: 600, color: "#3D3424", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, borderLeft: `4px solid ${SELECTED_BG}`, textAlign: "center" }}>
+            Fully booked for your dates? Message me anyway — I can often still find a space at Khaya, or at our sister guesthouse nearby.
           </div>
 
           {/* Tape chart */}
