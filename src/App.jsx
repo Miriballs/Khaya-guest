@@ -820,6 +820,26 @@ export default function KhayaGuestCalendar() {
     <div
       style={{ minHeight: "100vh", background: PAGE_BG, fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}
     >
+      {/* Persistent WhatsApp contact — always available, sits behind any
+          focused modal (photo viewer, room details, date picker, etc.) so it
+          never clutters those, but is otherwise visible throughout. */}
+      <a
+        href="https://wa.me/27723770575?text=Hi!%20I%20have%20a%20question%20about%20booking%20at%20Khaya."
+        target="_blank"
+        rel="noreferrer"
+        title="Message us on WhatsApp"
+        style={{
+          position: "fixed", right: 16, bottom: selected.size > 0 ? 110 : 24, zIndex: 140,
+          width: 52, height: 52, borderRadius: "50%",
+          background: "#25D366", color: "#fff",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 26, textDecoration: "none",
+          boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
+          transition: "bottom 0.2s ease",
+        }}
+      >
+        💬
+      </a>
       {/* Top bar */}
       <div style={{
         background: HEADER_BG, color: "#fff", padding: "14px 20px",
@@ -1018,9 +1038,17 @@ export default function KhayaGuestCalendar() {
               triggered full-dates popup below. Deliberately a bit more
               noticeable than a typical helper line, but still calm — a
               left accent border and icon, not a loud banner. */}
-          <div style={{ padding: "10px 16px", fontSize: 13, fontWeight: 600, color: "#3D3424", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, borderLeft: `4px solid ${SELECTED_BG}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, textAlign: "center" }}>
+          <div style={{ padding: "10px 16px", fontSize: 13, fontWeight: 600, color: "#3D3424", background: "#F2EDE0", borderBottom: `1px solid ${BORDER}`, borderLeft: `4px solid ${SELECTED_BG}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 8, textAlign: "center", flexWrap: "wrap" }}>
             <span style={{ fontSize: 14, flexShrink: 0 }}>💬</span>
             <span>Fully booked for your dates? Message me anyway — I can often still find a space at Khaya, or at our sister guesthouse nearby.</span>
+            <a
+              href="https://wa.me/27723770575?text=Hi!%20The%20calendar%20looks%20full%20for%20my%20dates%20%E2%80%94%20is%20there%20any%20space%3F"
+              target="_blank"
+              rel="noreferrer"
+              style={{ background: "#25D366", color: "#fff", borderRadius: 20, padding: "7px 16px", fontSize: 12, fontWeight: 700, textDecoration: "none", flexShrink: 0, whiteSpace: "nowrap" }}
+            >
+              WhatsApp me
+            </a>
           </div>
 
           {/* Tape chart */}
@@ -1631,6 +1659,18 @@ export default function KhayaGuestCalendar() {
                         ? "We'll confirm what we can cover, including the open nights, within 24 hours."
                         : "We'll get back to you within 24 hours to confirm and arrange payment.")}
           </div>
+          {requestSent && (
+            <div style={{ textAlign: "center", marginTop: 14 }}>
+              <a
+                href="https://wa.me/27723770575?text=Hi!%20I%20just%20sent%20a%20booking%20request%20on%20the%20calendar%20%E2%80%94%20wanted%20to%20follow%20up."
+                target="_blank"
+                rel="noreferrer"
+                style={{ display: "inline-block", background: "#25D366", color: "#fff", borderRadius: 20, padding: "9px 20px", fontSize: 13, fontWeight: 700, textDecoration: "none" }}
+              >
+                💬 Message me on WhatsApp
+              </a>
+            </div>
+          )}
         </div>
       )}
     </div>
