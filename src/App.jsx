@@ -839,20 +839,19 @@ export default function KhayaGuestCalendar() {
         rel="noreferrer"
         title="Message us on WhatsApp"
         style={{
-          position: "fixed", right: 14, bottom: selected.size > 0 ? 80 : 14, zIndex: 140,
+          position: "fixed", right: 14, bottom: 80, zIndex: 140,
           width: 52, height: 52, borderRadius: "50%",
           background: "#258071", color: "#fff",
           display: "flex", alignItems: "center", justifyContent: "center",
           fontSize: 26, textDecoration: "none",
           boxShadow: "0 4px 14px rgba(0,0,0,0.3)",
-          transition: "bottom 0.2s ease",
         }}
       >
         💬
       </a>
       {/* Top bar */}
       <div style={{
-        background: HEADER_BG, color: "#fff", padding: "14px 20px 22px",
+        background: HEADER_BG, color: "#fff", padding: "14px 20px",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         position: "sticky", top: 0, zIndex: 100,
       }}>
@@ -884,9 +883,6 @@ export default function KhayaGuestCalendar() {
             {view === "calendar" ? `Request to Book` : `Back to calendar`}
           </button>
         </div>
-        <svg style={{ position: "absolute", left: 0, right: 0, bottom: -1, width: "100%", height: 22, display: "block" }} viewBox="0 0 400 28" preserveAspectRatio="none">
-          <path d="M0,14 C33,4 67,4 100,14 C133,24 167,24 200,14 C233,4 267,4 300,14 C333,24 367,24 400,14 L400,28 L0,28 Z" fill={PAGE_BG} />
-        </svg>
       </div>
 
       {view === "calendar" ? (
