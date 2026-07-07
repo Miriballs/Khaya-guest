@@ -14,15 +14,15 @@ const SUPABASE_URL = "https://tmpcpfojwkvnvtfqyuwi.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRtcGNwZm9qd2t2bnZ0ZnF5dXdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI3Mzk1MDgsImV4cCI6MjA5ODMxNTUwOH0.Lcg_Jej1zAPx3jIgtHXy7gN3Z-Vw8RWm6RPLx5luAKA";
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// ── Palette (user-specified: dark red-brown = booked, white = free, forest green = selected)
-const BOOKED_BG   = "#6B2737";   // dark red-brown
-const BOOKED_FG   = "#6B2737";
-const FREE_BG     = "#FFFFFF";
-const SELECTED_BG = "#2D5A3D";   // forest green
+// ── Palette (modern refresh: ocean blue = selected/primary, terracotta = booked, warm sand = base)
+const BOOKED_BG   = "#CC6E48";   // terracotta
+const BOOKED_FG   = "#CC6E48";
+const FREE_BG     = "#FBF8F2";
+const SELECTED_BG = "#2C6E8E";   // ocean blue
 const SELECTED_FG = "#FFFFFF";
-const HEADER_BG   = "#1C3829";
-const PAGE_BG     = "#F2EDE6";
-const BORDER      = "#D5CFC7";
+const HEADER_BG   = "#1F4E63";   // ocean, deep
+const PAGE_BG     = "#F6F1E7";
+const BORDER      = "#E3DACB";
 const ROOM_COL_W  = 110;
 
 // ── Rooms with guest-facing details and season prices (low = Oct/Nov/Mar,
@@ -353,6 +353,16 @@ export default function KhayaGuestCalendar() {
       setAwayUntilKey(null);
     }
   }
+
+  // Loads the brand fonts once — purely cosmetic, no effect on data/logic.
+  useEffect(() => {
+    if (document.getElementById("khaya-font-link")) return;
+    const link = document.createElement("link");
+    link.id = "khaya-font-link";
+    link.rel = "stylesheet";
+    link.href = "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700&family=Work+Sans:wght@400;500;600;700&display=swap";
+    document.head.appendChild(link);
+  }, []);
 
   useEffect(() => {
     loadAvailability().finally(() => setLoading(false));
@@ -797,14 +807,14 @@ export default function KhayaGuestCalendar() {
 
   if (loading) {
     return (
-      <div style={{ minHeight: "100vh", background: PAGE_BG, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}>
+      <div style={{ minHeight: "100vh", background: PAGE_BG, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Work Sans', 'Helvetica Neue', Arial, sans-serif" }}>
         <div style={{ color: "#7A8C7D", fontSize: 14 }}>Loading availability…</div>
       </div>
     );
   }
   if (loadError) {
     return (
-      <div style={{ minHeight: "100vh", background: PAGE_BG, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif", padding: 20 }}>
+      <div style={{ minHeight: "100vh", background: PAGE_BG, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "'Work Sans', 'Helvetica Neue', Arial, sans-serif", padding: 20 }}>
         <div style={{ textAlign: "center", maxWidth: 320 }}>
           <div style={{ color: "#C0392B", fontSize: 14, marginBottom: 10 }}>{loadError}</div>
           <button onClick={() => { setLoading(true); loadAvailability().finally(() => setLoading(false)); }}
@@ -818,7 +828,7 @@ export default function KhayaGuestCalendar() {
 
   return (
     <div
-      style={{ minHeight: "100vh", background: PAGE_BG, fontFamily: "'Inter', 'Helvetica Neue', Arial, sans-serif" }}
+      style={{ minHeight: "100vh", background: PAGE_BG, fontFamily: "'Work Sans', 'Helvetica Neue', Arial, sans-serif" }}
     >
       {/* Persistent WhatsApp contact — always available, sits behind any
           focused modal (photo viewer, room details, date picker, etc.) so it
@@ -847,14 +857,14 @@ export default function KhayaGuestCalendar() {
         position: "sticky", top: 0, zIndex: 100,
       }}>
         <div>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: "#8FBA9F", textTransform: "uppercase", marginBottom: 2 }}>Khaya Kitehouse</div>
-          <div style={{ fontSize: 18, fontWeight: 700, fontFamily: "Georgia, serif" }}>Availability Calendar</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: "#9DC5D6", textTransform: "uppercase", marginBottom: 2 }}>Khaya Kitehouse</div>
+          <div style={{ fontSize: 18, fontWeight: 500, fontFamily: "'Playfair Display', Georgia, serif", fontStyle: "italic" }}>Availability Calendar</div>
         </div>
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           {selected.size > 0 && (
             <button
               onClick={() => setSelected(new Set())}
-              style={{ background: "none", border: "1px solid #8FBA9F", color: "#8FBA9F", borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 12 }}
+              style={{ background: "none", border: "1px solid #9DC5D6", color: "#9DC5D6", borderRadius: 8, padding: "6px 12px", cursor: "pointer", fontSize: 12 }}
             >
               Clear
             </button>
@@ -863,12 +873,12 @@ export default function KhayaGuestCalendar() {
             disabled={view === "calendar" && !meetsMin}
             onClick={() => setView(view === "calendar" ? "summary" : "calendar")}
             style={{
-              background: view === "summary" ? "transparent" : meetsMin ? "#D9A227" : "#3A4F40",
-              color: view === "summary" ? "#8FBA9F" : meetsMin ? "#1C2B12" : "#8a9a8d",
-              border: view === "summary" ? "1px solid #8FBA9F" : "none", borderRadius: 8,
+              background: view === "summary" ? "transparent" : meetsMin ? "#C1694F" : "#2A4550",
+              color: view === "summary" ? "#9DC5D6" : meetsMin ? "#fff" : "#8496A0",
+              border: view === "summary" ? "1px solid #9DC5D6" : "none", borderRadius: 8,
               padding: "8px 18px", cursor: (view === "calendar" && !meetsMin) ? "not-allowed" : "pointer",
               fontSize: 13, fontWeight: 800, transition: "background 0.2s",
-              boxShadow: (view === "calendar" && meetsMin) ? "0 2px 10px rgba(217,162,39,0.4)" : "none",
+              boxShadow: (view === "calendar" && meetsMin) ? "0 2px 10px rgba(193,105,79,0.4)" : "none",
             }}
           >
             {view === "calendar" ? `Request to Book →` : `← Back to calendar`}
@@ -888,7 +898,7 @@ export default function KhayaGuestCalendar() {
                 onClick={(e) => e.stopPropagation()}
                 style={{ background: "#fff", borderRadius: 16, maxWidth: 380, width: "100%", padding: "26px 24px", boxShadow: "0 12px 40px rgba(0,0,0,0.3)" }}
               >
-                <div style={{ fontFamily: "Georgia, serif", fontSize: 21, fontWeight: 700, color: HEADER_BG, marginBottom: 4 }}>
+                <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 21, fontWeight: 700, color: HEADER_BG, marginBottom: 4 }}>
                   Welcome to Khaya
                 </div>
                 <div style={{ fontSize: 13, color: "#888", marginBottom: 16 }}>Booking stays here is easy — here's how:</div>
@@ -929,7 +939,7 @@ export default function KhayaGuestCalendar() {
                 style={{
                   ...searchInputStyle, cursor: "pointer", textAlign: "left",
                   minWidth: 168, display: "inline-flex", alignItems: "center", gap: 8,
-                  color: searchIn ? "#1C3829" : "#999",
+                  color: searchIn ? "#1F4E63" : "#999",
                 }}
               >
                 <span style={{ fontSize: 15 }}>📅</span>
@@ -942,7 +952,7 @@ export default function KhayaGuestCalendar() {
               <div style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 1, marginBottom: 3 }}>Guests</div>
               <div style={{ display: "inline-flex", alignItems: "center", border: `1px solid ${BORDER}`, borderRadius: 8, overflow: "hidden", height: 38 }}>
                 <button onClick={() => setPeople(p => Math.max(1, p - 1))} style={stepBtn} aria-label="Fewer guests">−</button>
-                <span style={{ minWidth: 28, textAlign: "center", fontSize: 14, fontWeight: 700, color: "#1C3829" }}>{people}</span>
+                <span style={{ minWidth: 28, textAlign: "center", fontSize: 14, fontWeight: 700, color: "#1F4E63" }}>{people}</span>
                 <button onClick={() => setPeople(p => Math.min(8, p + 1))} style={stepBtn} aria-label="More guests">+</button>
               </div>
             </div>
@@ -1004,7 +1014,7 @@ export default function KhayaGuestCalendar() {
           {noRoomFitsSearch && !dismissedFullPopup && (
             <div onClick={() => setDismissedFullPopup(true)} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 300, display: "flex", alignItems: "center", justifyContent: "center", padding: 20, boxSizing: "border-box" }}>
               <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 14, padding: 20, width: "100%", maxWidth: 420 }}>
-                <div style={{ fontSize: 17, fontWeight: 800, color: "#1C3829", marginBottom: 8 }}>Oops — time to message me</div>
+                <div style={{ fontSize: 17, fontWeight: 800, color: "#1F4E63", marginBottom: 8 }}>Oops — time to message me</div>
                 <p style={{ fontSize: 14, color: "#444", lineHeight: 1.5, marginTop: 0, marginBottom: 14 }}>
                   Calendar is looking pretty full for {prettyShort(searchIn)} → {prettyShort(searchOut)}, but contact me directly and I can often still find you space at Khaya or at our sister guesthouse nearby.
                 </p>
@@ -1059,10 +1069,10 @@ export default function KhayaGuestCalendar() {
                       key={mg.key}
                       colSpan={mg.count}
                       style={{
-                        background: HEADER_BG, color: "#8FBA9F",
+                        background: HEADER_BG, color: "#9DC5D6",
                         fontSize: 11, fontWeight: 700, letterSpacing: 2,
                         textTransform: "uppercase", textAlign: "left",
-                        padding: "6px 8px", borderLeft: "1px solid #2D5A3D",
+                        padding: "6px 8px", borderLeft: "1px solid #2C6E8E",
                         border: "none", borderBottom: "none",
                       }}
                     >
@@ -1074,10 +1084,10 @@ export default function KhayaGuestCalendar() {
                 {/* Day-of-week row */}
                 <tr>
                   <th style={{
-                    width: ROOM_COL_W, minWidth: ROOM_COL_W, background: "#1A3325",
+                    width: ROOM_COL_W, minWidth: ROOM_COL_W, background: "#1B3E4F",
                     position: "sticky", left: 0, zIndex: 60,
-                    color: "#8FBA9F", fontSize: 10, padding: "4px 8px", textAlign: "left",
-                    borderRight: `2px solid #2D5A3D`, whiteSpace: "nowrap",
+                    color: "#9DC5D6", fontSize: 10, padding: "4px 8px", textAlign: "left",
+                    borderRight: `2px solid #2C6E8E`, whiteSpace: "nowrap",
                   }}>
                     Room
                   </th>
@@ -1091,12 +1101,12 @@ export default function KhayaGuestCalendar() {
                         key={i}
                         style={{
                           width: CW, minWidth: CW, maxWidth: CW,
-                          background: searched ? "#C9A227" : isToday ? "#2D5A3D" : isWeekend ? "#213D2D" : "#1A3325",
-                          color: searched ? "#1C3829" : isToday ? "#fff" : isWeekend ? "#A8D4B5" : "#8FBA9F",
+                          background: searched ? "#CC6E48" : isToday ? "#2C6E8E" : isWeekend ? "#24445A" : "#1B3E4F",
+                          color: searched ? "#1F4E63" : isToday ? "#fff" : isWeekend ? "#9DC5D6" : "#9DC5D6",
                           fontSize: 9, fontWeight: isToday || searched ? 800 : 600,
                           textAlign: "center", padding: "3px 0", userSelect: "none",
-                          borderLeft: isMonthStart ? `2px solid #8FBA9F` : `1px solid #2D5A3D`,
-                          borderRight: i === DATES.length - 1 ? `1px solid #2D5A3D` : "none",
+                          borderLeft: isMonthStart ? `2px solid #9DC5D6` : `1px solid #2C6E8E`,
+                          borderRight: i === DATES.length - 1 ? `1px solid #2C6E8E` : "none",
                           overflow: "hidden",
                         }}
                       >
@@ -1192,7 +1202,7 @@ export default function KhayaGuestCalendar() {
 
                           let bg = FREE_BG;
                           if (bkd) bg = BOOKED_BG;
-                          else if (pnd) bg = "#F0D2C8";
+                          else if (pnd) bg = "#EFD9CE";
                           else if (sel) bg = SELECTED_BG;
                           else if (takenElsewhere) bg = "#E9E4DD";
                           else if (tooSmall) bg = "#EFE7E4"; // not enough beds for the party
@@ -1200,7 +1210,7 @@ export default function KhayaGuestCalendar() {
 
                           const locked = bkd || pnd || takenElsewhere || tooSmall;
                           const showNum = dorm && !bkd && Z.showNumbers;
-                          const numColor = sel ? "#fff" : tooSmall ? "#B06A5E" : "#3A4A3D";
+                          const numColor = sel ? "#fff" : tooSmall ? "#B06A5E" : "#1B2A2E";
 
                           return (
                             <td
@@ -1229,18 +1239,23 @@ export default function KhayaGuestCalendar() {
                                 height: RH, padding: 0, textAlign: "center",
                                 fontSize: CW >= 30 ? 12 : 10, fontWeight: 700,
                                 background: bg,
-                                backgroundImage: pnd ? "repeating-linear-gradient(45deg, rgba(166,90,60,0.5) 0 5px, transparent 5px 10px)" : undefined,
-                                borderLeft: isToday ? `2px solid #2D5A3D` : `1px solid ${bkd ? "#7A3040" : pnd ? "#C98A6B" : sel ? "#3D7A52" : BORDER}`,
-                                borderBottom: `1px solid ${bkd ? "#7A3040" : pnd ? "#C98A6B" : sel ? "#3D7A52" : BORDER}`,
+                                // Was two separate `backgroundImage` keys before (one for pending,
+                                // one for takenElsewhere) — in a JS object literal the second one
+                                // silently wins, so the pending stripe was never actually
+                                // reaching the screen. Merged into one so both work correctly.
+                                backgroundImage: pnd
+                                  ? "repeating-linear-gradient(45deg, rgba(166,90,60,0.5) 0 5px, transparent 5px 10px)"
+                                  : takenElsewhere
+                                    ? "repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,0.04) 4px, rgba(0,0,0,0.04) 8px)"
+                                    : "none",
+                                borderLeft: isToday ? `2px solid ${SELECTED_BG}` : `1px solid ${bkd ? "#A8502F" : pnd ? "#C98A6B" : sel ? "#1F5670" : BORDER}`,
+                                borderBottom: `1px solid ${bkd ? "#A8502F" : pnd ? "#C98A6B" : sel ? "#1F5670" : BORDER}`,
                                 cursor: locked ? "not-allowed" : "pointer",
                                 userSelect: "none",
                                 touchAction: "pan-y",
                                 transition: "background 0.08s",
                                 outline: hoverCol === ci && !locked ? "1px solid #AAA" : "none",
                                 outlineOffset: -1,
-                                backgroundImage: takenElsewhere
-                                  ? "repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,0.04) 4px, rgba(0,0,0,0.04) 8px)"
-                                  : "none",
                               }}
                             >
                               {showNum ? <span style={{ color: numColor, pointerEvents: "none" }}>{free}</span> : null}
@@ -1276,14 +1291,14 @@ export default function KhayaGuestCalendar() {
                                     width: "100%", aspectRatio: "4 / 3", borderRadius: 10,
                                     background: `linear-gradient(135deg, ${roomTint(room.type)}, #FAF7F2)`,
                                     display: "flex", alignItems: "center", justifyContent: "center",
-                                    color: "#8a9a8d", fontSize: 11, textAlign: "center", padding: 6,
+                                    color: "#8496A0", fontSize: 11, textAlign: "center", padding: 6,
                                   }}>
                                     Photo coming soon
                                   </div>
                                 )}
                               </div>
                               <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{ fontSize: 15, fontWeight: 700, color: "#1C3829", marginBottom: 4 }}>{room.name}</div>
+                                <div style={{ fontSize: 15, fontWeight: 700, color: "#1F4E63", marginBottom: 4 }}>{room.name}</div>
                                 <div style={{ fontSize: 13, color: "#555", lineHeight: 1.5, marginBottom: 8 }}>{room.desc}</div>
                                 {myPricing ? (
                                   <div>
@@ -1400,7 +1415,7 @@ export default function KhayaGuestCalendar() {
       ) : (
         /* ── Summary view ── */
         <div style={{ maxWidth: 640, margin: "0 auto", padding: "32px 20px" }}>
-          <h2 style={{ fontFamily: "Georgia, serif", color: "#1C3829", marginBottom: 4 }}>Your stay at Khaya</h2>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", color: "#1F4E63", marginBottom: 4 }}>Your stay at Khaya</h2>
           <p style={{ color: "#888", fontSize: 13, marginTop: 0, marginBottom: 28 }}>
             {gaps.length > 0
               ? `Split across ${segments.length} room${segments.length !== 1 ? "s" : ""}, with ${gaps.reduce((s, g) => s + g.nights, 0)} night${gaps.reduce((s, g) => s + g.nights, 0) !== 1 ? "s" : ""} still open.`
@@ -1418,7 +1433,7 @@ export default function KhayaGuestCalendar() {
               background: "#EAF1E5", border: "1px solid #9DBE86", borderRadius: 12,
               padding: "16px 18px", marginBottom: 16,
             }}>
-              <div style={{ fontSize: 14, fontWeight: 700, color: "#2D5A3D", marginBottom: 6 }}>
+              <div style={{ fontSize: 14, fontWeight: 700, color: "#2C6E8E", marginBottom: 6 }}>
                 1 room could cover your whole stay
               </div>
               <div style={{ fontSize: 13, color: "#3C5A45", lineHeight: 1.5, marginBottom: 12 }}>
@@ -1427,7 +1442,7 @@ export default function KhayaGuestCalendar() {
               <button
                 onClick={() => setSelected(new Set(consolidation.nights.map(dk => cellKey(consolidation.room.id, dk))))}
                 style={{
-                  background: "#2D5A3D", color: "#fff", border: "none", borderRadius: 8,
+                  background: "#2C6E8E", color: "#fff", border: "none", borderRadius: 8,
                   padding: "10px 18px", fontSize: 13, fontWeight: 700, cursor: "pointer",
                 }}
               >
@@ -1490,8 +1505,8 @@ export default function KhayaGuestCalendar() {
                   }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 10 }}>
-                      <div style={{ fontSize: 15, fontWeight: 700, color: "#1C3829" }}>{seg.room.name}</div>
-                      <div style={{ fontSize: 16, fontWeight: 800, color: "#1C3829" }}>€{p.total}</div>
+                      <div style={{ fontSize: 15, fontWeight: 700, color: "#1F4E63" }}>{seg.room.name}</div>
+                      <div style={{ fontSize: 16, fontWeight: 800, color: "#1F4E63" }}>€{p.total}</div>
                     </div>
                     <div style={{ fontSize: 12, color: "#888", marginBottom: 8 }}>
                       {fmt(from, { day: "numeric", month: "short" })} → {fmt(toPlus, { day: "numeric", month: "short" })} · {p.nights} night{p.nights !== 1 ? "s" : ""}{p.isDormRoom ? ` · ${people} bed${people !== 1 ? "s" : ""}` : ""}
@@ -1525,15 +1540,15 @@ export default function KhayaGuestCalendar() {
             color: "#fff", marginBottom: 20,
           }}>
             <div>
-              <div style={{ fontSize: 13, color: "#8FBA9F" }}>Total</div>
-              <div style={{ fontSize: 13, color: "#8FBA9F", marginTop: 3 }}>{totalNights} nights across {segments.length} room{segments.length !== 1 ? "s" : ""}</div>
+              <div style={{ fontSize: 13, color: "#9DC5D6" }}>Total</div>
+              <div style={{ fontSize: 13, color: "#9DC5D6", marginTop: 3 }}>{totalNights} nights across {segments.length} room{segments.length !== 1 ? "s" : ""}</div>
             </div>
             <div style={{ fontSize: 28, fontWeight: 800 }}>€{totalCost}</div>
           </div>
 
           {/* Your details */}
           <div style={{ marginBottom: 18 }}>
-            <div style={{ fontSize: 13, fontWeight: 700, color: "#1C3829", marginBottom: 8 }}>Your details</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#1F4E63", marginBottom: 8 }}>Your details</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <div>
                 <label style={{ fontSize: 11, fontWeight: 600, color: "#999", textTransform: "uppercase", letterSpacing: 1 }}>Name <span style={{ color: "#C0392B" }}>*</span></label>
@@ -1541,7 +1556,7 @@ export default function KhayaGuestCalendar() {
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                   placeholder="Your full name"
-                  style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1C3829", fontFamily: "inherit" }}
+                  style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1F4E63", fontFamily: "inherit" }}
                 />
               </div>
               <div>
@@ -1553,7 +1568,7 @@ export default function KhayaGuestCalendar() {
                   onChange={(e) => setGuestPhone(e.target.value)}
                   placeholder="+27 ... or 0027 ..."
                   inputMode="tel"
-                  style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${phoneTouchedInvalid ? "#C0392B" : BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1C3829", fontFamily: "inherit" }}
+                  style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${phoneTouchedInvalid ? "#C0392B" : BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1F4E63", fontFamily: "inherit" }}
                 />
                 <div style={{ fontSize: 11, color: phoneTouchedInvalid ? "#C0392B" : "#aaa", marginTop: 4 }}>
                   Include the country code — start with + or 00 (e.g. +27 or 0027).
@@ -1568,7 +1583,7 @@ export default function KhayaGuestCalendar() {
                   onChange={(e) => setGuestEmail(e.target.value)}
                   placeholder="Optional"
                   inputMode="email"
-                  style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${emailTouchedInvalid ? "#C0392B" : BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1C3829", fontFamily: "inherit" }}
+                  style={{ width: "100%", boxSizing: "border-box", marginTop: 4, border: `1px solid ${emailTouchedInvalid ? "#C0392B" : BORDER}`, borderRadius: 9, padding: "11px 12px", fontSize: 15, color: "#1F4E63", fontFamily: "inherit" }}
                 />
                 <div style={{ fontSize: 11, color: emailTouchedInvalid ? "#C0392B" : "#aaa", marginTop: 4 }}>
                   Optional — happy to have it as a backup, but not required.
@@ -1581,7 +1596,7 @@ export default function KhayaGuestCalendar() {
           <div style={{ border: `1px solid ${BORDER}`, borderRadius: 12, marginBottom: 20, overflow: "hidden" }}>
             <button
               onClick={() => setShowPolicy(s => !s)}
-              style={{ width: "100%", background: "#FAF7F2", border: "none", padding: "13px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#1C3829" }}
+              style={{ width: "100%", background: "#FAF7F2", border: "none", padding: "13px 16px", display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer", fontSize: 14, fontWeight: 700, color: "#1F4E63" }}
             >
               Deposit &amp; cancellation policy
               <span style={{ transform: showPolicy ? "rotate(180deg)" : "none", transition: "transform 0.15s", color: "#7A8C7D" }}>▼</span>
@@ -1591,11 +1606,11 @@ export default function KhayaGuestCalendar() {
                 <p style={{ marginTop: 0 }}>
                   Payment is taken after confirmation of your booking request, via WhatsApp or email.
                 </p>
-                <div style={{ fontWeight: 700, color: "#1C3829", marginTop: 12, marginBottom: 4 }}>Deposit policy</div>
+                <div style={{ fontWeight: 700, color: "#1F4E63", marginTop: 12, marginBottom: 4 }}>Deposit policy</div>
                 <p style={{ margin: 0 }}>
                   100% of the stay is payable on confirmation of your reservation, or 50% if your booking is over 30 nights — with the other 50% due just before arrival.
                 </p>
-                <div style={{ fontWeight: 700, color: "#1C3829", marginTop: 12, marginBottom: 4 }}>Cancellation policy</div>
+                <div style={{ fontWeight: 700, color: "#1F4E63", marginTop: 12, marginBottom: 4 }}>Cancellation policy</div>
                 <ul style={{ marginTop: 0, marginBottom: 12, paddingLeft: 18 }}>
                   <li>60 or more days before arrival — 100% refund</li>
                   <li>59–30 days before arrival — 50% refund</li>
@@ -1604,7 +1619,7 @@ export default function KhayaGuestCalendar() {
                 <p style={{ marginTop: 0, marginBottom: 12 }}>
                   That said, if you change or cancel — even shortly before or during your stay — we'll always try to fill the room or bed for you, and if we succeed we'll return your deposit in full. So please get in touch and we'll find the best solution together.
                 </p>
-                <p style={{ marginBottom: 0, fontWeight: 600, color: "#1C3829" }}>
+                <p style={{ marginBottom: 0, fontWeight: 600, color: "#1F4E63" }}>
                   Your booking is only valid after we have sent you a final confirmation and payment is taken.
                 </p>
               </div>
@@ -1635,7 +1650,7 @@ export default function KhayaGuestCalendar() {
               {submitError}
             </div>
           )}
-          <div style={{ textAlign: "center", marginTop: 10, fontSize: requestSent ? 13 : 11, lineHeight: 1.5, color: requestSent ? "#2D5A3D" : "#aaa", fontWeight: requestSent ? 600 : 400 }}>
+          <div style={{ textAlign: "center", marginTop: 10, fontSize: requestSent ? 13 : 11, lineHeight: 1.5, color: requestSent ? "#2C6E8E" : "#aaa", fontWeight: requestSent ? 600 : 400 }}>
             {requestSent
               ? (awayUntilKey
                   ? `Thanks for your booking request. We're away for a few days and will be slower than usual to reply — but don't worry, your request is locked in until we're back on ${prettyShort(awayUntilKey)}. The booking is only confirmed once approved on our side and payment received.`
@@ -1668,7 +1683,7 @@ export default function KhayaGuestCalendar() {
   );
 }
 
-const SEGMENT_COLORS = ["#2D5A3D", "#6B8F3E", "#C4622D", "#8B6914", "#2B5E8C", "#7B5EA7", "#5C6B6E", "#A0522D"];
+const SEGMENT_COLORS = ["#2C6E8E", "#6B8F3E", "#C4622D", "#8B6914", "#2B5E8C", "#7B5EA7", "#5C6B6E", "#A0522D"];
 
 // Timeline spanning the full booking range; selected nights coloured by room,
 // gaps shown as a hatched light strip.
@@ -1722,9 +1737,9 @@ function Legend({ color, label, border }) {
 function HelpStep({ n, title, children }) {
   return (
     <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
-      <div style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: "#2D5A3D", color: "#fff", fontWeight: 700, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>{n}</div>
+      <div style={{ flexShrink: 0, width: 26, height: 26, borderRadius: "50%", background: "#2C6E8E", color: "#fff", fontWeight: 700, fontSize: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>{n}</div>
       <div>
-        <div style={{ fontWeight: 700, fontSize: 14, color: "#1C3829", marginBottom: 1 }}>{title}</div>
+        <div style={{ fontWeight: 700, fontSize: 14, color: "#1F4E63", marginBottom: 1 }}>{title}</div>
         <div style={{ fontSize: 13, color: "#555", lineHeight: 1.45 }}>{children}</div>
       </div>
     </div>
@@ -1841,7 +1856,7 @@ function DateRangePicker({ start, end, searchIn, searchOut, onPick, onClose }) {
         {/* Header */}
         <div style={{ padding: "16px 18px 12px", borderBottom: `1px solid ${BORDER}` }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ fontFamily: "Georgia, serif", fontSize: 17, fontWeight: 700, color: "#1C3829" }}>
+            <div style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: 17, fontWeight: 700, color: "#1F4E63" }}>
               {!searchIn ? "Pick your arrival" : !searchOut ? "Now pick your departure" : "Your dates"}
             </div>
             <button onClick={onClose} style={{ background: "none", border: "none", fontSize: 22, color: "#bbb", cursor: "pointer", lineHeight: 1 }}>×</button>
@@ -1862,7 +1877,7 @@ function DateRangePicker({ start, end, searchIn, searchOut, onPick, onClose }) {
             for (let d = 1; d <= daysIn; d++) cells.push(d);
             return (
               <div key={mi} style={{ marginBottom: 18 }}>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "#1C3829", margin: "6px 4px 8px" }}>
+                <div style={{ fontSize: 14, fontWeight: 700, color: "#1F4E63", margin: "6px 4px 8px" }}>
                   {mon.toLocaleDateString("en-GB", { month: "long", year: "numeric" })}
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 2, marginBottom: 4 }}>
@@ -1929,22 +1944,22 @@ function DateRangePicker({ start, end, searchIn, searchOut, onPick, onClose }) {
 
 const searchInputStyle = {
   border: "1px solid #D5CFC7", borderRadius: 8, padding: "8px 10px",
-  fontSize: 14, color: "#1C3829", height: 38, boxSizing: "border-box",
+  fontSize: 14, color: "#1F4E63", height: 38, boxSizing: "border-box",
   background: "#fff", fontFamily: "inherit",
 };
 const stepBtn = {
   background: "#F2EDE6", border: "none", width: 34, height: 38,
-  fontSize: 18, fontWeight: 700, color: "#2D5A3D", cursor: "pointer",
+  fontSize: 18, fontWeight: 700, color: "#2C6E8E", cursor: "pointer",
 };
 
 function RoomDot({ type }) {
-  const colors = { private: "#2D5A3D", dorm: "#7B5EA7", tent: "#8B6914", special: "#C4622D" };
+  const colors = { private: "#2C6E8E", dorm: "#7B5EA7", tent: "#8B6914", special: "#C4622D" };
   return <div style={{ width: 7, height: 7, borderRadius: "50%", background: colors[type] ?? "#999", flexShrink: 0 }} />;
 }
 
 // Soft background tint for the placeholder photo, themed by room type
 function roomTint(type) {
-  const tints = { private: "#D9E7DD", dorm: "#E3DCF0", tent: "#EFE6CC", special: "#F2DECF" };
+  const tints = { private: "#D6E8EE", dorm: "#E3DCF0", tent: "#EFE6CC", special: "#F2DECF" };
   return tints[type] ?? "#E2E2E2";
 }
 
